@@ -6,10 +6,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import com.example.android.roomdemoapp.Database.Note;
 import com.example.android.roomdemoapp.Database.NoteDao;
 import com.example.android.roomdemoapp.Database.NoteDatabase;
+
+import java.util.List;
 
 public class NoteViewModel extends AndroidViewModel {
     private String TAG = this.getClass().getSimpleName();
@@ -39,6 +42,10 @@ public class NoteViewModel extends AndroidViewModel {
             noteDao.insert(notes[0]);
             return null;
         }
+    }
+
+    public LiveData<List<Note>> getAllNotes() {
+        return fNoteDao.getNotes();
     }
     @Override
     protected void onCleared() {
