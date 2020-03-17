@@ -2,27 +2,29 @@ package com.example.android.roomdemoapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.example.android.roomdemoapp.Database.Note;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+import com.example.android.roomdemoapp.Database.Note;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     private static final int NEW_NOTE_ACTIVITY_REQUEST_CODE = 1;
     private String TAG = this.getClass().getSimpleName();
     private NoteViewModel fNoteViewModel;
+    private RecyclerView rvNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, NEW_NOTE_ACTIVITY_REQUEST_CODE);
             }
         });
-
-        fNoteViewModel = new ViewModelProvider(this).get(NoteViewModel.class);
+        rvNotes = (RecyclerView) findViewById(R.id.rvNotes);
+        //pass an instance of note view model factory responsible for creating note view model by passing the application parameter
+        fNoteViewModel = new ViewModelProvider(this, new NoteViewModelFactory(this.getApplication())).get(NoteViewModel.class);
+        setUpRvNotes();
     }
 
     //Result of the note saving action
@@ -69,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    private void setUpRvNotes() {
+        fNoteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                NotesAdapter notesAdapter = new NotesAdapter(notes);
+                rvNotes.setAdapter(notesAdapter);
+            }
+        });
     }
 
     @Override

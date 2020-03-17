@@ -1,13 +1,13 @@
 package com.example.android.roomdemoapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class NewNoteActivity extends AppCompatActivity {
     //Key for fetching the note
@@ -21,6 +21,7 @@ public class NewNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_note);
         //When the save button is clicked
         Button saveBtn = findViewById(R.id.save_btn);
+        fEditText = findViewById(R.id.edit_tv);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
